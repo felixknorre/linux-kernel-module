@@ -27,7 +27,7 @@ Source: Prof. Dr. Stefan Böhmer
 
 ### Compilation
 ```bash
-cd HelloWorld
+cd src
 
 make
 ```
