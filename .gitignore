@@ -1,0 +1,10 @@
+# Objext files
+src/*.o
+src/*.ko
+src/*.obj
+
+# Kernel Module Compile Results
+src/*.mod*
+src/*.cmd
+src/.tmp_versions/
+scr/modules.order
