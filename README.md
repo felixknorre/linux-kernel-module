@@ -1,6 +1,6 @@
 # linux-kernel-module
 
-## Setup
+## Installation
 
 Use Debian Buster V10.3.0 and install additional packages:
 
@@ -23,5 +23,34 @@ sudo apt-get install bin86
 ```
 Source: Prof. Dr. Stefan Böhmer
 
+## Usage
 
+### Compilation
+```bash
+cd HelloWorld
 
+make
+```
+
+### Commands for Kernel Modules in Linux
+
+```bash
+
+# list modules
+lsmod
+
+# show information about module
+modinfo [modulename/filename]
+
+# insert module
+insmod [filename] [module options...]
+
+# remove module
+# -f(force), -s(send errors to syslog), -v(show version of program and exit)
+rmmod [-f] [-s] [-v] [modulename]
+
+# inserting and removing modules
+# -r(remove), -q(quit), -a(insert all module names on the command line)
+modprobe [-r] [-q] [-a]
+
+```
