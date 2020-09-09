@@ -54,3 +54,8 @@ rmmod [-f] [-s] [-v] [modulename]
 modprobe [-r] [-q] [-a]
 
 ```
+
+## Documentation
+
+### printk
+print messages to the kernel log (var/log/syslog)

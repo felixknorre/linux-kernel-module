@@ -7,4 +7,5 @@ src/*.obj
 src/*.mod*
 src/*.cmd
 src/.tmp_versions/
-scr/modules.order
+src/modules.order
+src/Module.symvers
