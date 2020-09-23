@@ -9,7 +9,7 @@ Use Debian Buster V10.3.0 and install additional packages:
 sudo apt-get install module-assistant
 # make
 sudo apt-get install make
-# look up your linux version 
+# look up your linux kernel version 
 uname -a
 # and install matching linux source and header (in my case)
 sudo apt-get install linux-source-4.19
@@ -58,4 +58,23 @@ modprobe [-r] [-q] [-a]
 ## Documentation
 
 ### printk
-print messages to the kernel log (var/log/syslog)
+print messages to the kernel log (var/log/messages), used for debugging
+
+### __init and __exit
+Marker for funktions that are only used at initialization and cleanup
+* __init: is executed only once, then swap space/delete
+* __exit: only used during unloading, Modules usually run for a long time, therefore swap space
+
+### Versioning
+
+* Prepatch -> release candidate, used for community tests
+* Mainline -> last prepatch
+* Stable -> last mainline
+* Longterm -> longterm support 
+
+#### Notation(no longer official)
+
+* 4.2.15
+    * 4 -> Major Number
+    * 2 -> Minor Number
+    * 15 -> Revision Number
