@@ -6,6 +6,7 @@
 
 ifneq ($(KERNELRELEASE),) 
 obj-m	:= my_kernel_mod.o
+my_kernel_mod-objs  := my_km.o reg.o
 
 
 else

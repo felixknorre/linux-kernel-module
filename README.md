@@ -65,16 +65,91 @@ Marker for funktions that are only used at initialization and cleanup
 * __init: is executed only once, then swap space/delete
 * __exit: only used during unloading, Modules usually run for a long time, therefore swap space
 
-### Versioning
+### Registration
+1. Allocation of a device number
+```c
+static dev_t devNumb;
+// dev:output para, 
+// baseminor: first minor number, 
+// count: number of minor numbers required 
+// name: name of the device or driver
+alloc_chrdev_region(&devNumb, 0, 1, "ModuleName");
+```
+2. Allocation of memory for a cdev structure
+```c
+static struct cdev * device_cdev_obj;
+device_cdev_obj = cdev_alloc();
+```
 
-* Prepatch -> release candidate, used for community tests
-* Mainline -> last prepatch
-* Stable -> last mainline
-* Longterm -> longterm support 
+3. Init cdev
+* you need a file_operations structure for calling the POSIXs functions
+```c
+static struct file_operations km_op = {
+    .open = km_open,
+    .release = km_close,
+    .read = km_read,
+    .write = km_write,
+    .unlocked_ioctl = km_ioctl,
+    .owner = THIS_MODULE
+};
 
-#### Notation(no longer official)
+cdev_init(device_cdev_obj, &km_op);
+kobject_set_name(&device_cdev_obj->kobj, KM_DRIVER_NAME);
+device_cdev_obj->owner = THIS_MODULE;
+```
 
-* 4.2.15
-    * 4 -> Major Number
-    * 2 -> Minor Number
-    * 15 -> Revision Number
+4. Add the kernel object to the kernel
+```c
+result = cdev_add(device_cdev_obj, devNumb, 1);
+``` 
+
+5. Create a class
+```c
+km_class = class_create(THIS_MODULE, KM_CLASS_NAME);
+```
+
+6. Create a device
+```c
+km_device = device_create(km_class, NULL, devNumb, NULL, KM_DEVICE_NAME);
+```
+
+### Workqueue
+
+* the variable HZ defines the interrupts per second (100-1000)
+* jiffies -> number of interrupts
+* T_Future = jiffies + n * Hz, n = seconds
+
+#### Creation delayed workqueue
+
+* struct workqueue_struct -> def. of a workqueue
+* struct work_struct -> def. of task
+
+1. Creation of a workqueue
+```c 
+#define WQ_NAME "my_wq"
+static workqueue_struct * wq;
+
+wq = create_workqueue(WQ_NAME);
+```
+
+2. Define task
+```c
+DECLARE_WORK(work_name, funct_ptr);
+DECLARE_DELAYED_WORK(work_name, funct_ptr);
+```
+3. Insert task
+```c
+queue_work(wq, &work_name, 10*Hz);
+queue_delayed_work(wq, &work_name, 10*Hz);
+```
+
+#### Removal
+```c
+ret = cancel_delayed_work(&kmm_wq_elem);
+
+if(ret == 0) {
+    flush_delayed_work(&kmm_wq_elem);
+}	
+
+destroy_workqueue(wq);
+```
